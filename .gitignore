@@ -2,3 +2,4 @@ data/
 model.pth
 .venv/
 __pycache__/
+*.pth
