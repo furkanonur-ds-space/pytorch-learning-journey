@@ -6,6 +6,7 @@
 #   3. Define a loss function (CrossEntropy) and optimizer (SGD).
 #   4. Train the network on the training data.
 #   5. Test the network on the test data.
+# Note: Added __main__ guard to prevent RuntimeError on Windows with num_workers > 0.
 
 import torch
 import torchvision
@@ -17,7 +18,7 @@ import torch.optim as optim
 # ==========================================
 # 1. DEFINE THE CNN (LeNet adapted for RGB)
 # ==========================================
-# Sınıf tanımlamaları her zaman en dışarıda (üstte) kalmalıdır.
+# Class definitions should always be at the top level.
 print("\n--- 1. Building the CNN ---")
 class Net(nn.Module):
     def __init__(self):
@@ -41,9 +42,9 @@ class Net(nn.Module):
 
 
 # ==========================================
-# 2. ANA PROGRAM KİLİDİ (WINDOWS İÇİN ŞART!)
+# MAIN PROGRAM GUARD (REQUIRED FOR WINDOWS!)
 # ==========================================
-# Çoklu işlem (num_workers > 0) kullanan tüm kodlar bu bloğun içinde olmalıdır.
+# Any code that uses multiprocessing (num_workers > 0) must be inside this block.
 if __name__ == '__main__':
     
     # 0. GET DEVICE
@@ -60,7 +61,7 @@ if __name__ == '__main__':
     batch_size = 4
 
     trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
-    # num_workers=2 burada olduğu için if __name__ == '__main__' kilidine ihtiyacımız var!
+    # We need the __main__ guard because of num_workers=2 here!
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
 
     testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
@@ -68,7 +69,7 @@ if __name__ == '__main__':
 
     classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-    # Modeli GPU'ya gönder
+    # Move the model to the GPU
     net = Net()
     net.to(device)
 
@@ -83,11 +84,13 @@ if __name__ == '__main__':
     for epoch in range(epochs):
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
-            # Verileri GPU'ya taşı
+            # Move inputs and labels to the GPU
             inputs, labels = data[0].to(device), data[1].to(device)
 
+            # Zero the parameter gradients
             optimizer.zero_grad()
 
+            # Forward + Backward + Optimize
             outputs = net(inputs)
             loss = criterion(outputs, labels)
             loss.backward()
@@ -100,7 +103,7 @@ if __name__ == '__main__':
 
     print("✅ Finished Training")
 
-    # Modeli kaydet
+    # Save the model
     PATH = './cifar_net.pth'
     torch.save(net.state_dict(), PATH)
 
@@ -118,4 +121,4 @@ if __name__ == '__main__':
             correct += (predicted == labels).sum().item()
 
     print(f'Accuracy of the network on the 10000 test images: {100 * correct // total} %')
-    print("\n Blitz CIFAR-10 script completed successfully.")
+    print("\n🎉 Blitz CIFAR-10 script completed successfully.")
