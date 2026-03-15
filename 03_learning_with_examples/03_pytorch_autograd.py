@@ -66,12 +66,12 @@ for t in range(2000):
         c -= learning_rate * c.grad
         d -= learning_rate * d.grad
 
-        # Manually zero the gradients after updating weights!
-        # If we don't do this, gradients will accumulate (add up) across iterations.
-        a.grad.zero_()
-        b.grad.zero_()
-        c.grad.zero_()
-        d.grad.zero_()
+        # Manually zero the gradients after updating weights
+        # Setting to None is more memory-efficient than using .zero_()
+        a.grad = None
+        b.grad = None
+        c.grad = None
+        d.grad = None
 
 print(f"\nResult: y = {a.item():.2f} + {b.item():.2f}x + {c.item():.2f}x^2 + {d.item():.2f}x^3")
 print("✅ PyTorch Autograd script finished.")
