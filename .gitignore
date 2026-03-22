@@ -1,6 +1,27 @@
+# Data
 data/
-model.pth
+
+# Model files
+*.pth
+*.pt
+*.onnx
+
+# Virtual environments
 .venv/
 .venv_old_py312/
+
+# Python cache
 __pycache__/
-*.pth
+*.pyc
+
+# Outputs
+outputs/
+**/outputs/
+
+# IDE
+.vscode/
+*.code-workspace
+
+# OS
+Thumbs.db
+.DS_Store
