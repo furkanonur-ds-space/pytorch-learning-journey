@@ -1,5 +1,6 @@
 data/
 model.pth
 .venv/
+.venv_old_py312/
 __pycache__/
 *.pth
