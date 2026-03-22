@@ -5,6 +5,8 @@ data/
 *.pth
 *.pt
 *.onnx
+*.tflite
+*.task
 
 # Virtual environments
 .venv/
@@ -17,6 +19,9 @@ __pycache__/
 # Outputs
 outputs/
 **/outputs/
+
+# Logs
+err*.txt
 
 # IDE
 .vscode/
